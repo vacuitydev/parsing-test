@@ -1,0 +1,2 @@
+<bold>This should be bold</bold>
+But this should not be bold
