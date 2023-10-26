@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "bold": "node index.js bold.txt",
-    "list": "node index.js list.txt"
+    "list": "node index.js lists.txt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

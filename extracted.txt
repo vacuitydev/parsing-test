@@ -1,0 +1,7 @@
+Familiarity with Yaml, AWS, Azure Cloud, Dockers, Kubernetes, Openshift and ELK StackFamiliarity with Yaml, AWS, Azure Cloud, Dockers, Kubernetes, Openshift and ELK Stack
+<bold>adsa</bold>
+<ul>
+    <li>
+        
+    </li>
+</ul>

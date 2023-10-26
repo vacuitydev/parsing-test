@@ -4,21 +4,25 @@ export class JankyParser {
     constructor() {
       this.tagStatuses = {
         bold: false,
+        li: false
       };
       this.result = [];
       this.parser = new htmlparser2.Parser({
         onopentag: (name, attribs) => {
-          if (name === "bold") {
-            this.tagStatuses.bold = true;
+          if (name in this.tagStatuses){
+            this.tagStatuses[name] = true
           }
         },
         ontext: (text) => {
-          // Add the text to the result, with the bold flag
-          this.result.push({ text, bold: this.tagStatuses.bold });
+          if(text==="\r\n"){
+            return
+          }
+          // Add the text to the result, with the right flag
+          this.result.push({ text, bold: this.tagStatuses.bold, li: this.tagStatuses.li });
         },
         onclosetag: (name) => {
-          if (name === "bold") {
-              this.tagStatuses.bold = false;
+          if (name in this.tagStatuses){
+            this.tagStatuses[name] = false
           }
         },
         onend: () => {
