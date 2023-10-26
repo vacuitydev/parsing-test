@@ -1,47 +1,6 @@
 import fs from "fs";
-import * as htmlparser2 from "htmlparser2";
-
-class JankyParser {
-  constructor() {
-    this.tagStatuses = {
-      bold: false,
-    };
-    this.result = [];
-    this.parser = new htmlparser2.Parser({
-      onopentag: (name, attribs) => {
-        if (name === "bold") {
-          this.tagStatuses.bold = true;
-        }
-      },
-      ontext: (text) => {
-        // Add the text to the result, with the bold flag
-        this.result.push({ text, bold: this.tagStatuses.bold });
-      },
-      onclosetag: (name) => {
-        if (name === "bold") {
-            this.tagStatuses.bold = false;
-        }
-      },
-      onend: () => {
-        // Process the parsed content
-        console.log("Parsed Content:");
-        this.result.forEach((item) => {
-          if (item.bold) {
-            console.log(`Bold: ${item.text}`);
-          } else {
-            console.log(`Regular: ${item.text}`);
-          }
-        });
-      },
-    });
-  }
-  parse(input){
-    this.result =[]
-    this.parser.write(input)
-    return this.result
-  }
-}
-
+import { Packer, Document, Paragraph, TextRun } from "docx";
+import { JankyParser } from "./JankyParser";
 const parser = new JankyParser()
 
 // Get the filename from the command line arguments
@@ -57,6 +16,29 @@ async function main(){
     console.log("File content:\n", data);
     const result = parser.parse(data)
     console.log(result);
-
+    const texts = []
+    result.forEach(item=>{
+        
+            texts.push(new TextRun({
+                bold: item.bold,
+                text: item.text
+            }))
+    })
+    const doc = new Document({
+        sections:[
+            {
+                properties:{},
+                children:[
+                    new Paragraph({
+                        children:[
+                            ...texts
+                        ]
+                    })
+                ]
+            }
+        ]
+    })
+    const buffed = await Packer.toBuffer(doc)
+    fs.writeFileSync(`${filename.split('.').slice(0,-1).join("")}.docx`,buffed)
 } 
 main()
